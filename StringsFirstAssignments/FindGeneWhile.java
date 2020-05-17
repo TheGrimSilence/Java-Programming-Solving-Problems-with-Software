@@ -1,3 +1,5 @@
+import edu.duke.StorageResource;
+
 /**
  * Write a description of FindGeneWhile here.
  * 
@@ -55,7 +57,8 @@ public class FindGeneWhile {
         }
     }
     
-    public void printAllGenes(String dna) {
+    public StorageResource getAllGenes(String dna) {
+        StorageResource geneList = new StorageResource();
         int startIndex = 0;
         
         while (true) {
@@ -64,10 +67,11 @@ public class FindGeneWhile {
                 break;
             }
             System.out.println(currentGene);
+            geneList.add(currentGene);
             startIndex = dna.indexOf(currentGene, startIndex) + currentGene.length();
         }
         
-    
+        return geneList;
     }
     
     public void testSimpleGene() {
@@ -121,11 +125,14 @@ public class FindGeneWhile {
         System.out.println("Tests finished");
     }
     
-    public void testPrintAllGenes() {
+    public void testGetAllGenes() {
 //        String dna = "TTTGAAATTATATTATTTCAAAAGGAAAGCACTAATGGTCTTTTTTTCTGATGACTTAACTCGTAAAGATCATGAAATTGATTCTTTCAATAGTTAAAAATCAAAAATTCACTATGTAAACTGAAGCATCTATCTAACGGTTTGTATCTCGAATACTTAGTCTCTTTTGTTATTCCGGATAAATTCATACCCCTTATTCA";
         String dna = "AATGCTAACTAGCTGACTAAT";
-        System.out.println("Testing printAllGenes() on " + dna);
-        printAllGenes(dna);
+        StorageResource genes = getAllGenes(dna);
+        
+        for (String g : genes.data()) {
+            System.out.println(g);
+        }
         
         System.out.println("Test finished");
     }
