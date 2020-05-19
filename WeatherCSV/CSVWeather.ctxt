@@ -1,0 +1,10 @@
+#BlueJ class context
+comment0.target=CSVWeather
+comment0.text=\r\n\ Write\ a\ description\ of\ CSVWeather\ here.\r\n\ \r\n\ @author\ (your\ name)\ \r\n\ @version\ (a\ version\ number\ or\ a\ date)\r\n
+comment1.params=parser
+comment1.target=org.apache.commons.csv.CSVRecord\ hottestHourInFile(org.apache.commons.csv.CSVParser)
+comment2.params=
+comment2.target=org.apache.commons.csv.CSVRecord\ hottestOfMultipleDays()
+comment3.params=
+comment3.target=void\ testTemps()
+numComments=4
