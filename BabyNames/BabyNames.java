@@ -42,7 +42,7 @@ public class BabyNames {
      */
     public long getRank(int year, String name, String gender) {
         long rank = -1;
-        FileResource fr = new FileResource("us_babynames_test/yob" + year + "short.csv");
+        FileResource fr = new FileResource("data/yob" + year + ".csv");
         CSVParser parser = fr.getCSVParser(false);
 
         for(CSVRecord record : parser) {
@@ -63,7 +63,7 @@ public class BabyNames {
      */
     public String getName(int year, int rank, String gender) {
         String name = "";
-        FileResource fr = new FileResource("us_babynames_test/yob" + year + "short.csv");
+        FileResource fr = new FileResource("data/yob" + year + ".csv");
         CSVParser parser = fr.getCSVParser(false);
 
         for(CSVRecord record : parser) {
@@ -89,8 +89,8 @@ public class BabyNames {
      * in a different year, based on the same popularity.
      */
     public void whatIsNameInYear(String name, int year, int newYear, String gender) {
-        FileResource fr = new FileResource("us_babynames_test/yob" + year + "short.csv");
-        FileResource newFr = new FileResource("us_babynames_test/yob" + newYear + "short.csv");
+        FileResource fr = new FileResource("data/yob" + year + ".csv");
+        FileResource newFr = new FileResource("data/yob" + newYear + ".csv");
         CSVParser parserOld = fr.getCSVParser(false);
         CSVParser parserNew = newFr.getCSVParser(false);
         String newName = "";
@@ -211,31 +211,65 @@ public class BabyNames {
         }
         return numBorn;
     }
+    
+    private void log(String args) {
+        System.out.println(args);
+    }
 
     /*
      * For testing the methods
      */
-    public void testTotlaBirth() {
-        FileResource fr = new FileResource("yob1900.csv");
-        totalBirths(fr);
+    public void testTotalBirths() {
+        // FileResource fr = new FileResource("data/yob1900.csv");
+        // totalBirths(fr);
 
-        long rank = getRank(2012, "Mason", "M");
-        System.out.println("Rank is: " + rank);
+        // long rank = getRank(2012, "Mason", "M");
+        // System.out.println("Rank is: " + rank);
 
-        String name = getName(2012, 10, "M");
-        System.out.println("Name: " + name);
+        // String name = getName(2012, 10, "M");
+        // System.out.println("Name: " + name);
 
-        whatIsNameInYear("Isabella", 2012, 2014, "F");
+        // whatIsNameInYear("Isabella", 2012, 2014, "F");
 
-        System.out.println(yearOfHighestRank("Mason", "M"));
+        // System.out.println(yearOfHighestRank("Mason", "M"));
 
-        System.out.println(getAverageRank("Mason", "M"));
+        // System.out.println(getAverageRank("Mason", "M"));
 
-        System.out.println(getTotalBirthsRankedHigher(2012, "Ethan", "M"));
+        // System.out.println(getTotalBirthsRankedHigher(2012, "Ethan", "M"));
+        
+        // 1
+        totalBirths(new FileResource("data/yob1900.csv"));
+        // 2
+        totalBirths(new FileResource("data/yob1905.csv"));
+        // 3
+        log("Rank Emily" + getRank(1960, "Emily", "F"));
+        // 4
+        log("Rank Frank" + getRank(1971, "Frank", "M"));
+        // 5
+        log("Name ranked 350 " + getName(1980, 350, "F"));
+        // 6
+        log("Name ranked 450 " + getName(1982, 450, "M"));
+        // 7
+        whatIsNameInYear("Susan", 1972, 2014, "F");
+        // 8
+        whatIsNameInYear("Owen", 1974, 2014, "M");
+        // 9
+        yearOfHighestRank("Genevieve", "F");
+        // 10
+        yearOfHighestRank("Mich", "M");
+        // 11
+        getAverageRank("Susan", "F");
+        // 12
+        getAverageRank("Robert", "M");
+        // 13
+        getTotalBirthsRankedHigher(1990, "Emily", "F");
+        // 14
+        getTotalBirthsRankedHigher(2012, "Drew", "M");
     }
 
     public static void main() {
         BabyNames names = new BabyNames();
-        names.testTotlaBirth();
+        names.testTotalBirths();
     }
+    
 }
