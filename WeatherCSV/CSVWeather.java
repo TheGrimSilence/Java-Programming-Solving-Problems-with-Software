@@ -56,17 +56,20 @@ public class CSVWeather {
      * @return          The CSVRecord handed up to main search method.
      */
     private CSVRecord dualTemperatureOfDay(CSVParser parser, Boolean high, String category) {
-        FileResource file = new FileResource();
-        
         CSVRecord recordHour = null;
 
         for (CSVRecord currentHour : parser) {
-            if (currentHour.get(category) == "-9999" || currentHour.get(category) == "N/A") {
+            System.out.println(category + ": " + currentHour.get(category));
+            System.out.println(currentHour.get(category).equals("N/A"));
+            if (currentHour.get(category).equals("-9999")) {
                 System.out.println("Invalid value, breaking...");
                 break;
+            }  else if (currentHour.get(category).equals("N/A")) {
+                System.out.println("Invalid value, breaking...");
+                break;
+            } else {
+                recordHour = dualTemperatureComparison(currentHour, recordHour, false, category);
             }
-            
-            recordHour = dualTemperatureComparison(currentHour, recordHour, false, category);
         }
 
         return recordHour; 
@@ -190,7 +193,7 @@ public class CSVWeather {
     }
     
     
-    public void testColdestHourInFile() {
+    public void testColdestHourOfDay() {
         FileResource fileResource = new FileResource();
         CSVParser parser = fileResource.getCSVParser();
         
