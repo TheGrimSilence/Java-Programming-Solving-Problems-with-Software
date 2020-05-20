@@ -9,6 +9,43 @@ import java.io.*;
  * @version (a version number or a date)
  */
 public class CSVWeather {
+    private double averageTemperatureOfDay(CSVParser parser) {
+        double sum = 0;
+        
+        for (CSVRecord currentHour : parser) {
+            double recordedTemperature = Double.parseDouble(currentHour.get("TemperatureF"));
+            sum += recordedTemperature;
+        }
+        
+        return sum / 24;
+    }
+    
+    private double averageTemperatureWithHighHumidityOfDay(CSVParser parser, double minimumHumidity) {
+        double sum = 0;
+        double recordedHours = 0;
+        for (CSVRecord currentHour : parser) {
+            String temperature = currentHour.get("TemperatureF");
+            String humidity = currentHour.get("Humidity");
+            
+            double recordedTemperature = Double.parseDouble(temperature);
+            double recordedHumidity = Double.parseDouble(humidity);
+            
+            if (temperature == "-9999" || humidity == "N/A") {
+                System.out.println("Breaking...");
+                break;
+            } else {
+                if (recordedHumidity > minimumHumidity) {
+                    System.out.println("humid" + recordedHumidity);
+                    System.out.println("minhumid" + minimumHumidity);
+                    
+                    sum += recordedTemperature;
+                    recordedHours += 1;
+                }
+            }
+        }
+        return sum / recordedHours;
+    }
+    
     /**
      * Finds the lowest or highest of the given category in a single day.
      * 
@@ -19,6 +56,8 @@ public class CSVWeather {
      * @return          The CSVRecord handed up to main search method.
      */
     private CSVRecord dualTemperatureOfDay(CSVParser parser, Boolean high, String category) {
+        FileResource file = new FileResource();
+        
         CSVRecord recordHour = null;
 
         for (CSVRecord currentHour : parser) {
@@ -71,8 +110,10 @@ public class CSVWeather {
             double currentDbl = Double.parseDouble(currentTemperature.get(category));
             
             if (high) {
+                if (currentDbl == recordDbl) return recordTemperature;
                 if (currentDbl > recordDbl) recordTemperature = currentTemperature;
             } else {
+                if (currentDbl == recordDbl) return recordTemperature;
                 if (currentDbl < recordDbl) recordTemperature = currentTemperature;
             }
         }
@@ -108,13 +149,40 @@ public class CSVWeather {
         return fileName;
     }
     
+    // AVERAGE
+    
+    public void testAverageTemperature() {
+        FileResource file = new FileResource();
+        CSVParser parser = file.getCSVParser();
+        double average = averageTemperatureOfDay(parser);
+        System.out.println("Average temperature was " + average);
+    }
+    
+    public void testAverageTemperatureWithHighHumidityOfDay() {
+        CSVParser parser = new FileResource().getCSVParser();
+        double average = averageTemperatureWithHighHumidityOfDay(parser, 80);
+        System.out.println("Average high humidity temperature: " + average);
+    }
+    
+    // HUMIDITY
+    
     public void testLowesetHumidityInFile() {
         FileResource fr = new FileResource();
         CSVParser parser = fr.getCSVParser();
-        CSVRecord csv = dualTemperatureOfDay(parser, false, "Humidity");
+        String cat = "Humidity";
+        CSVRecord recordHour = dualTemperatureOfDay(parser, false, cat);
         
-        System.out.println("Lowest humidity recorded: " + csv.get("Humidity"));
+        System.out.println("Lowest humidity was " + recordHour.get(cat) + " at " + recordHour.get("DateUTC"));
     }
+    
+    public void testLowestHumidityOfManyFiles() {
+        String cat = "Humidity";
+        CSVRecord recordHour = dualTemperatureOfManyDays(false, cat);
+        
+        System.out.println("Lowest humidity was " + recordHour.get(cat) + " at " + recordHour.get("DateUTC"));
+    }
+    
+    // COLDEST TEMPERATURE
     
     public void testFileWithColdestTemp() {
         String coldestDay = fileWithColdestTemperature();
@@ -130,6 +198,8 @@ public class CSVWeather {
         System.out.println("Coldest recorded temperature: " + dualTemperatureOfDay(parser, false, "TemperatureF").get("TemperatureF"));
     }
 
+    // HOTTEST TEMPERATURE
+    
     public void testTemps() {
         FileResource fr = new FileResource("hottestTemp/data/2015/weather-2015-01-01.csv");
         CSVRecord hottest = dualTemperatureOfDay(fr.getCSVParser(), true, "TemperatureF");
